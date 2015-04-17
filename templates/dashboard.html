@@ -1,0 +1,63 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Time tracker</h1>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form>
+            <div class="row">
+                <div class="form-group col-lg-3">
+                    <label for="hourTarget">Daily hour target</label>
+                    <input type="text" class="form-control" id="hourTarget" value="7" ng-model="vm.scope.hourThreshold">
+                    <span class="help-block">Controls whether cell is green (acceptable) or red (unacceptable)</span>
+                </div>
+
+                <div class="form-group col-lg-3">
+                    <label for="team">Team</label>
+                    <select class="form-control" id="team" ng-options="team.discipline for team in vm.scope.teams track by team.discipline" ng-model="vm.scope.selectedTeam"></select>
+                    <span class="help-block">Filters report on specific team</span>
+                </div>
+
+                <div class="form-group col-lg-3">
+                    <label for="startDate">Start Date</label>
+                    <input type="text" class="form-control" id="startDate" ng-model="vm.scope.startDate">
+                    <span class="help-block">Report begin date. Format should be YYYY-MM-DD.</span>
+                </div>
+
+                <div class="form-group col-lg-3">
+                    <label for="endDate">End Date</label>
+                    <input type="text" class="form-control" id="endDate" ng-model="vm.scope.endDate">
+                    <span class="help-block">Report end date. Format should be YYYY-MM-DD.</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-2">
+                    <button type="submit" class="btn btn-default" ng-click="vm.search()">Build report</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Employee</th>
+            <th ng-repeat="date in vm.scope.dates">{{date}}</th>
+            <th>Total Hours</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="user in vm.scope.users">
+            <td data-employee-id="{{user.id}}">
+                {{user.display_name}}
+            </td>
+            <td ng-repeat="date in user.dates" ng-class="{danger: date.hours < vm.scope.hourThreshold, success: date.hours >= vm.scope.hourThreshold}">{{date.hours.toFixed(2)}}</td>
+            <td>
+                {{vm.totalHours(user).toFixed(2)}}
+            </td>
+        </tr>
+    </tbody>
+</table>
